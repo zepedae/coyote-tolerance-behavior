@@ -10,14 +10,14 @@ library(ggpubr)
 #################   Load Data and Model   ##################
 
 # dataAll: coyote gps data with environmental and social covariates
-load("dataAll614.rdata")
+load("ssf_data.rdata")
 
-# fitAllAMT: model fit with AMT
-load("fitAllAMT1014.rdata")
+# ssf_fit: model fit with AMT
+load("ssf_fit.rdata")
 
 
 
-###############   Calculate Plotting Values   ##################
+###############   Calculate Plot Parameters   ##################
 
 # function finds standardized human population density value based on actual val
 unstand <- function(i) {

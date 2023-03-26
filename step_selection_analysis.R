@@ -12,8 +12,11 @@ library(ggeffects)
 
 #####################    Prep Data    ###################
 
+# load gps data
+load("gps_ssf.rdata")
+
 # load raster with covariates
-raster <- stack("finalRaster524.grd")
+raster <- stack("raster.grd")
 
 # organize data for SSF 
 ssf_data <- function(data){
@@ -21,7 +24,6 @@ ssf_data <- function(data){
   # data frame to spatial points data frame
   coordinates(data)<-c("x", "y")
   proj4string(data)<-CRS("+proj=longlat +datum=WGS84")
-  data <-spTransform(data, CRS("+proj=utm +zone=16 +ellps=WGS84 +datum=WGS84"))
   data <- spTransform(data, crs(raster))
   
   # group points into tracks and then bursts with 15 min interlocation periods
@@ -51,10 +53,10 @@ ssf_data <- function(data){
     lapply(data3[c("propW", "propL", "propB", "medInc", "propA", "popDens", 
                    "dist", "ag", "nat")], scale)
   
-  return(data4)
+  return(data3)
 }
 
-data <- ssf_data(riskGPS)
+data <- ssf_data(gps_ssf)
 data$caseN <- ifelse(data$case_ == TRUE, 1, 0)
 
 
@@ -65,22 +67,12 @@ data$caseN <- ifelse(data$case_ == TRUE, 1, 0)
 ssf_fit <-  fit_clogit(caseN ~ 
                      medIncST + propWST + distST + natST + agST + popDensST + 
                      medIncST:popDensST + propWST:popDensST + distST:popDensST + 
-                      natST:popDensST + agST:popDensST + strata(step_), 
-                     data = data, model = true)
+                      natST:popDensST + agST:popDensST + strata(step_id_), 
+                     data = data)
                    
-summary(fitAll)
+summary(ssf_fit)
 
+save(data, file = "ssf_data.rdata")
+save(ssf_fit, file = "ssf_fit.rdata")
 
-
-
-#################   Model Diagnostics   ####################
-
-# check predictors for multicollinearity
-vifs <- vif(fitAllAMT$model)
-
-
-# correlation matrices
-x <- dataAll[, c(24, 27, 29, 30:32)]
-cor <- cor(x, method = "pearson", use = "complete.obs")
-write.csv(cor, file = "HumanToleranceCorrelationMatrixAll.csv")
 
