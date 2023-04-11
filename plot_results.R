@@ -7,6 +7,7 @@ library(ggpubr)
 
 
 
+
 #################   Load Data and Model   ##################
 
 # dataAll: coyote gps data with environmental and social covariates
@@ -14,6 +15,7 @@ load("ssf_data.rdata")
 
 # ssf_fit: model fit with AMT
 load("ssf_fit.rdata")
+
 
 
 
