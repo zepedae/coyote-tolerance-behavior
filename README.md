@@ -1,8 +1,3 @@
----
-editor_options: 
-  markdown: 
-    wrap: 72
----
 
 # Effects of Social and Environmental Characteristics on Coyote Human-Tolerance Behavior
 
